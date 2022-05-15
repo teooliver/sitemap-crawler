@@ -7,10 +7,11 @@ import (
 
 func main() {
 	start := time.Now()
+	fmt.Printf("Starting script %s\n", start)
 	p := DefaultParser{}
-	results := scrapeSitemap("https://www.hollandandbarrett.com/sitemap-healthhub.xml", p, 10)
-	for _, res := range results {
-		fmt.Println(res)
+	results := scrapeSitemap("https://www.omgubuntu.co.uk/sitemap.xml", p, 10)
+	for i, res := range results {
+		fmt.Println(i, res.URL)
 	}
 
 	timeElapsed := time.Since(start)
