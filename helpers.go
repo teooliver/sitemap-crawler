@@ -16,6 +16,7 @@ func extractUrls(response *http.Response) ([]string, error) {
 		return nil, err
 	}
 	results := []string{}
+
 	sel := doc.Find("loc")
 	for i := range sel.Nodes {
 		loc := sel.Eq(i)
@@ -31,6 +32,7 @@ func extractSitemapURLs(startURL string) []string {
 	var n int
 	n++
 	go func() { worklist <- []string{startURL} }()
+	log.Printf("===> START URL: %s", startURL)
 	for ; n > 0; n-- {
 		list := <-worklist
 		for _, link := range list {
@@ -40,17 +42,18 @@ func extractSitemapURLs(startURL string) []string {
 				if err != nil {
 					log.Printf("Error retrieving URL: %s", link)
 				}
+
 				urls, _ := extractUrls(response)
 				if err != nil {
 					log.Printf("Error extracting document from response, URL: %s", link)
 				}
+
 				sitemapFiles, pages := isSitemap(urls)
 				if sitemapFiles != nil {
 					worklist <- sitemapFiles
 				}
-				for _, page := range pages {
-					toCrawl = append(toCrawl, page)
-				}
+
+				toCrawl = append(toCrawl, pages...)
 			}(link)
 		}
 	}

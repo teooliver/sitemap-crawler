@@ -9,7 +9,8 @@ func main() {
 	start := time.Now()
 	fmt.Printf("Starting script %s\n", start)
 	p := DefaultParser{}
-	results := scrapeSitemap("https://www.omgubuntu.co.uk/sitemap.xml", p, 10)
+	results := scrapeSitemap("https://www.omgubuntu.co.uk/sitemap-1.xml", p, 10)
+
 	for i, res := range results {
 		fmt.Println(i, res.URL)
 	}
